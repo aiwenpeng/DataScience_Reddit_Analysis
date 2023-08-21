@@ -29,13 +29,16 @@ class redis_connection():
         except Exception as e:
             print(e)
         
-        return [mem for mem in all_members]
+        return [mem for mem in all_members] # optimize point: change list to set, because it consumes less memory
 
 
 if __name__ == "__main__":
-    redis_db_num = 0
+    redis_db_num = 7
     redis_host = 'localhost'
     redis_port = 6379
     rc = redis_connection(redis_host=redis_host, redis_port=redis_port, redis_db_num=redis_db_num)
     rc.add_members("class:b", "name:haha")
     print(rc.get_all_members("class:b"))
+    # myset = rc.redis_client.set('foo', 'bar')
+    rc.redis_client.sadd('all_ids', 111,2,3)
+    # print(rc.redis_client.get('foo'))
