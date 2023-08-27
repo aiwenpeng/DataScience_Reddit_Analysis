@@ -13,7 +13,7 @@ Configs = configparser.ConfigParser()
 Configs.read(path_to_settings)
 
 # reddit related variable
-    # print Configs? how to get the client_id
+
 reddit_userid = Configs['reddit_cred']['client_id'] 
 reddit_secret = Configs['reddit_cred']['client_secret']
 reddit_useragent = "lubongivan"
@@ -43,9 +43,10 @@ def upload_redditPost(reddit_userid: str, reddit_secret: str, reddit_useragent: 
     # iterate and print out hot reddit topics
     for submission in reddit.subreddit(reddit_topic).hot(limit=num_of_threads):
         #check if post id existed, if existed, do not add to redis, if not add to redis
-        if submission.id not in all_keys_list:
-            rc.add_members(submission.id)
+        # if submission.id not in all_keys_list:
+        #     rc.add_members(submission.id)
             #save to mongodb
+        print(submission.title)
 
     # return reddit.subreddit(reddit_topic).hot(limit=num_of_threads)
     return
