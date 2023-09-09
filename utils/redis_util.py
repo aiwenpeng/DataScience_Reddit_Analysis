@@ -26,6 +26,7 @@ class redis_connection():
         except Exception as e:
             print(f"{e}")
             logger.error(e)
+            logging.info("error connect to redis")
     
     def add_members(self, key, value):
         """
@@ -47,6 +48,7 @@ class redis_connection():
         except Exception as e:
             print(e)
             logger.error(e)
+            logging.info("error add member in redis")
     
     def get_all_members(self, key):
         """
@@ -59,6 +61,7 @@ class redis_connection():
         except Exception as e:
             print(e)
             logger.error(e)
+            logging.info("error get all members")
         
         return [mem for mem in all_members] # optimize point: change list to set, because it consumes less memory
     
@@ -83,6 +86,7 @@ class redis_connection():
         except Exception as e:
             print(e)
             logger.error(e)
+            logging.info("error delete members")
 
 
 
