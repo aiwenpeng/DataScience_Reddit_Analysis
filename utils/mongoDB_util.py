@@ -47,18 +47,20 @@ class mongodb_connection():
     def get_documents(self, query):
         """
         description: get documents to from collection
-        query: key and value
+        query: query that grabs documents matches it from db, in the form of key and value: ie {"name": "eva"}
 
         """
         documents = self.collection.find(query)
         result = []
         try:
+            logging.info(f"Starting grabbing all documents from mongodb matches {query}")
             for doc in documents:
                 result.append(doc)
         except Exception as e:
             print(e)
             logging.info("error get documents")
         
+        logging.info(f"Finished grabbing documents from db, results are: {result}")
         return result
     
     def delete_documents(self, query, delete_one=True):
@@ -76,7 +78,17 @@ class mongodb_connection():
         except Exception as e:
             print(e)
             logging.info("error delete documents")
-    
+
+def check_mongo_conn():
+   path_to_setting = '/home/awpeng/DataScience_Reddit_Analysis/secrets.ini'
+   Configs = configparser.ConfigParser()
+   Configs.read(path_to_setting)
+   mongo_username = Configs['MongoDB']['user_name']
+   mongo_pwd = Configs['MongoDB']['pwd']
+   url = f"mongodb+srv://{mongo_username}:{mongo_pwd}@cluster0.pfuwrvp.mongodb.net/?retryWrites=true&w=majority"
+   db_name = "Reddit_Post"
+   collection_name = "test_collection"
+   mongodb_connection(url, db_name, collection_name)
 
 
 if __name__ == "__main__":

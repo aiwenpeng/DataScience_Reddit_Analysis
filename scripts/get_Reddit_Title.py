@@ -20,7 +20,7 @@ Configs.read(path_to_settings)
 reddit_userid = Configs['reddit_cred']['client_id'] 
 reddit_secret = Configs['reddit_cred']['client_secret']
 reddit_useragent = "lubongivan"
-reddit_topic = "boxoffice"
+reddit_topic = "datascience"
 reddit_thread_limit = 10
 mongo_username = Configs['MongoDB']['user_name']
 mongo_pwd = Configs['MongoDB']['pwd']
@@ -40,18 +40,21 @@ def upload_redditPost(reddit_userid: str, reddit_secret: str, reddit_useragent: 
         user_agent=reddit_useragent,
     )
     
-    rc = redis_connection(redis_host=redis_host, redis_port=redis_port, redis_db_num=redis_db_num)
+    # rc = redis_connection(redis_host=redis_host, redis_port=redis_port, redis_db_num=redis_db_num)
 
     # go into redis and grab existing reddit post ids
+    logging.info("Starting grabbing uniques ids from redis...")
     all_keys_list = redis_conn.get_all_members("all_ids")
     print(all_keys_list)
+    logging.info(f"Process complted, grabbed {len(all_keys_list)} from redis")
+    logging.info("---" * 20)
 
     post_title = []
     # iterate and print out hot reddit topics
     for submission in reddit.subreddit(reddit_topic).hot(limit=num_of_threads):
         #check if post id existed, if existed, do not add to redis, if not add to redis
         if submission.id not in all_keys_list:
-            rc.add_members("all_ids", submission.id)
+            redis_conn.add_members("all_ids", submission.id)
             post_title.append(submission.title)
     
     # save to mongodb
@@ -71,11 +74,15 @@ def upload_redditPost(reddit_userid: str, reddit_secret: str, reddit_useragent: 
 
 # logic, get id for the reddit post, check if id already existed in redis, if existed, do not add, else we can add
 
-if __name__ == "__main__":
+def run_get_reddit_title():
     redis_db_num = 7
     redis_host = 'localhost'
     redis_port = 6379
     db_name = "Reddit_Post"
-    collection_name = "test_collection"
+    collection_name = "RedditPost_DS"
     rc = redis_connection(redis_host=redis_host, redis_port=redis_port, redis_db_num=redis_db_num)
     upload_redditPost(reddit_userid, reddit_secret, reddit_useragent, reddit_topic, reddit_thread_limit, rc, mongo_conn_str, db_name, collection_name)
+    
+
+if __name__ == "__main__":
+    run_get_reddit_title()

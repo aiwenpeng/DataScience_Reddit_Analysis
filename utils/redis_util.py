@@ -27,6 +27,7 @@ class redis_connection():
             print(f"{e}")
             logger.error(e)
             logging.info("error connect to redis")
+            raise(e)
     
     def add_members(self, key, value):
         """
@@ -88,8 +89,11 @@ class redis_connection():
             logger.error(e)
             logging.info("error delete members")
 
-
-
+def check_redis_conn():
+    redis_db_num = 0
+    redis_host = 'localhost'
+    redis_port = 6379
+    redis_connection(redis_host=redis_host, redis_port=redis_port, redis_db_num=redis_db_num)
 
 if __name__ == "__main__":
     redis_db_num = 0
