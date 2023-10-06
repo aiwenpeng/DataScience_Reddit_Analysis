@@ -8,7 +8,7 @@ This project goes through Reddit posts about datascience, finds the sentiment of
 Get Reddit post  
 
 Data validation
-- deduplicate posts
+- check post duplication
 
 Upload data to mongoDB
 
